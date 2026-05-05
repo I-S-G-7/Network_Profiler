@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Fingerprint Generator</title>
+    <link rel="stylesheet" href="static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Network Fingerprint Generator</h1>
+            <p>Analyze and classify website network behavior</p>
+        </header>
+
+        <section class="controls">
+            <div class="input-group">
+                <label for="url1">Target URL 1:</label>
+                <input type="text" id="url1" placeholder="https://example.com">
+                <div id="url1-error" class="error-msg"></div>
+            </div>
+            
+            <div class="input-group">
+                <label for="url2">Target URL 2 (for comparison):</label>
+                <input type="text" id="url2" placeholder="https://youtube.com">
+                <div id="url2-error" class="error-msg"></div>
+            </div>
+
+            <div class="buttons">
+                <button id="analyze-btn" onclick="analyzeSingle()">Analyze URL 1</button>
+                <button id="compare-btn" onclick="compareUrls()">Compare Both</button>
+            </div>
+            <div id="loading" class="loading-msg" style="display: none;">Capturing traffic and processing... Please wait (around 10-15 seconds).</div>
+        </section>
+
+        <section id="results" class="results-grid" style="display: none;">
+            <div id="site1-card" class="card">
+                <h2>Fingerprint: <span id="site1-url"></span></h2>
+                <div id="site1-stats" class="stats"></div>
+            </div>
+            
+            <div id="site2-card" class="card" style="display: none;">
+                <h2>Fingerprint: <span id="site2-url"></span></h2>
+                <div id="site2-stats" class="stats"></div>
+            </div>
+        </section>
+
+        <section id="charts" class="charts-container" style="display: none;">
+            <div class="chart-wrapper">
+                <h3>Protocol Distribution</h3>
+                <canvas id="protocolChart"></canvas>
+            </div>
+            <div class="chart-wrapper">
+                <h3>Packet Size Histogram</h3>
+                <canvas id="sizeChart"></canvas>
+            </div>
+        </section>
+    </div>
+    <script src="static/script.js"></script>
+</body>
+</html>
