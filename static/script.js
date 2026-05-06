@@ -1,5 +1,6 @@
 let protocolChartInstance = null;
 let sizeChartInstance = null;
+let timelineChartInstance = null;
 
 function validateUrl(url, errorId) {
     const errorDiv = document.getElementById(errorId);
@@ -31,7 +32,7 @@ async function analyzeSingle() {
         if (data.error) {
             alert("Error: " + data.error);
         } else {
-            displayResults(data, null);
+            displayResults(data, null, null);
         }
     } catch (e) {
         alert("Request failed: " + e.message);
@@ -59,7 +60,7 @@ async function compareUrls() {
         if (data.error) {
             alert("Error: " + data.error);
         } else {
-            displayResults(data.site1, data.site2);
+            displayResults(data.site1, data.site2, data.diffs);
         }
     } catch (e) {
         alert("Request failed: " + e.message);
@@ -73,7 +74,7 @@ function showLoading(isLoading) {
     document.getElementById('compare-btn').disabled = isLoading;
 }
 
-function displayResults(site1, site2) {
+function displayResults(site1, site2, diffs) {
     document.getElementById('results').style.display = 'flex';
     document.getElementById('charts').style.display = 'flex';
     
@@ -81,10 +82,13 @@ function displayResults(site1, site2) {
     
     if (site2) {
         document.getElementById('site2-card').style.display = 'block';
+        document.getElementById('comparison-report').style.display = 'block';
         renderCard('site2', site2);
         renderCharts(site1, site2);
+        renderComparisonTable(site1, site2, diffs);
     } else {
         document.getElementById('site2-card').style.display = 'none';
+        document.getElementById('comparison-report').style.display = 'none';
         renderCharts(site1, null);
     }
 }
@@ -112,6 +116,7 @@ function renderCard(prefix, data) {
 function renderCharts(site1, site2) {
     renderProtocolChart(site1, site2);
     renderSizeChart(site1, site2);
+    renderTimelineChart(site1, site2);
 }
 
 function renderProtocolChart(site1, site2) {
@@ -198,4 +203,90 @@ function renderSizeChart(site1, site2) {
             }
         }
     });
+}
+
+function renderTimelineChart(site1, site2) {
+    const ctx = document.getElementById('timelineChart').getContext('2d');
+    if (timelineChartInstance) timelineChartInstance.destroy();
+
+    let maxSec = 0;
+    const bps1 = site1.bytes_per_second || {};
+    const keys1 = Object.keys(bps1).map(Number);
+    if (keys1.length > 0) maxSec = Math.max(maxSec, ...keys1);
+
+    let bps2 = {};
+    if (site2) {
+        bps2 = site2.bytes_per_second || {};
+        const keys2 = Object.keys(bps2).map(Number);
+        if (keys2.length > 0) maxSec = Math.max(maxSec, ...keys2);
+    }
+
+    const labels = Array.from({length: maxSec + 1}, (_, i) => i);
+    const data1 = labels.map(sec => bps1[sec] || 0);
+
+    const datasets = [{
+        label: 'Site 1 (Bytes/sec)',
+        data: data1,
+        borderColor: '#36A2EB',
+        backgroundColor: 'rgba(54, 162, 235, 0.1)',
+        fill: true,
+        tension: 0.3
+    }];
+
+    if (site2) {
+        const data2 = labels.map(sec => bps2[sec] || 0);
+        datasets.push({
+            label: 'Site 2 (Bytes/sec)',
+            data: data2,
+            borderColor: '#FF6384',
+            backgroundColor: 'rgba(255, 99, 132, 0.1)',
+            fill: true,
+            tension: 0.3
+        });
+    }
+
+    timelineChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: { labels: labels, datasets: datasets },
+        options: {
+            scales: {
+                x: { title: { display: true, text: 'Seconds' } },
+                y: { title: { display: true, text: 'Bytes' }, beginAtZero: true }
+            }
+        }
+    });
+}
+
+function renderComparisonTable(site1, site2, diffs) {
+    const tbody = document.getElementById('comparison-tbody');
+    if (!diffs) diffs = {};
+    
+    const sizeDiff = diffs.mean_size_diff ? diffs.mean_size_diff.toFixed(2) : 0;
+    
+    tbody.innerHTML = `
+        <tr>
+            <td>Total Bytes</td>
+            <td>${site1.total_bytes}</td>
+            <td>${site2.total_bytes}</td>
+            <td>${diffs.total_bytes_diff > 0 ? '+' : ''}${diffs.total_bytes_diff || 0}</td>
+        </tr>
+        <tr>
+            <td>Total Packets</td>
+            <td>${site1.total_packets}</td>
+            <td>${site2.total_packets}</td>
+            <td>${(site1.total_packets || 0) - (site2.total_packets || 0)}</td>
+        </tr>
+        <tr>
+            <td>Unique IPs</td>
+            <td>${site1.unique_ips}</td>
+            <td>${site2.unique_ips}</td>
+            <td>${diffs.unique_ips_diff > 0 ? '+' : ''}${diffs.unique_ips_diff || 0}</td>
+        </tr>
+        <tr>
+            <td>Mean Packet Size</td>
+            <td>${site1.mean_packet_size}</td>
+            <td>${site2.mean_packet_size}</td>
+            <td>${diffs.mean_size_diff > 0 ? '+' : ''}${sizeDiff}</td>
+        </tr>
+    `;
 }

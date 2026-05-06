@@ -28,6 +28,7 @@ def generate_fingerprint(url, features):
         "max_packet_size": features["max_packet_size"],
         "protocol_distribution": protocol_distribution,
         "size_buckets": features.get("size_buckets", {}),
+        "bytes_per_second": features.get("bytes_per_second", {}),
         "packet_sizes": features["packet_sizes"]
     }
     return fingerprint

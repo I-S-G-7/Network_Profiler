@@ -48,6 +48,10 @@
 
         <section id="charts" class="charts-container" style="display: none;">
             <div class="chart-wrapper">
+                <h3>Traffic Timeline (Bytes/sec)</h3>
+                <canvas id="timelineChart"></canvas>
+            </div>
+            <div class="chart-wrapper">
                 <h3>Protocol Distribution</h3>
                 <canvas id="protocolChart"></canvas>
             </div>
@@ -55,6 +59,22 @@
                 <h3>Packet Size Histogram</h3>
                 <canvas id="sizeChart"></canvas>
             </div>
+        </section>
+
+        <section id="comparison-report" class="card" style="display: none; margin-top: 20px;">
+            <h2>Comparison Report</h2>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Target URL 1</th>
+                        <th>Target URL 2</th>
+                        <th>Difference</th>
+                    </tr>
+                </thead>
+                <tbody id="comparison-tbody">
+                </tbody>
+            </table>
         </section>
     </div>
     <script src="static/script.js"></script>

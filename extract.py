@@ -79,6 +79,13 @@ def extract_features(pcap_file):
             size_buckets["1001-1500"] += 1
         else:
             size_buckets["1500+"] += 1
+    bytes_per_second = {}
+    if timestamps:
+        start_time = timestamps[0]
+        for t, s in zip(timestamps, packet_sizes):
+            sec = int(t - start_time)
+            bytes_per_second[sec] = bytes_per_second.get(sec, 0) + s
+
     return {
         "total_packets": len(packets),
         "total_bytes": total_bytes,
@@ -87,6 +94,7 @@ def extract_features(pcap_file):
         "dns_queries": list(dns_queries),
         "packet_sizes": packet_sizes,
         "size_buckets": size_buckets,
+        "bytes_per_second": bytes_per_second,
         "mean_packet_size": statistics.mean(packet_sizes) if packet_sizes else 0,
         "max_packet_size": max(packet_sizes) if packet_sizes else 0
     }

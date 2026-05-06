@@ -219,3 +219,24 @@ canvas {
     50% { opacity: 1; }
     100% { opacity: 0.6; }
 }
+
+.comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.comparison-table th, .comparison-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.comparison-table th {
+    background-color: #f1f5f9;
+    font-weight: 600;
+}
+
+.comparison-table tr:hover {
+    background-color: #f8fafc;
+}

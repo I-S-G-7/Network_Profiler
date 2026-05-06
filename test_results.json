@@ -1,0 +1,70 @@
+{
+  "https://www.youtube.com": {
+    "total_bytes": 4708389,
+    "total_packets": 3890,
+    "mean_packet_size": 1210.38,
+    "unique_ips": 19,
+    "dns_queries": 7,
+    "top_protocol": "UDP",
+    "protocol_dist": {
+      "DNS": 0.41,
+      "HTTPS": 29.25,
+      "TCP": 0.1,
+      "UDP": 70.23
+    },
+    "small_packets": 1140,
+    "large_packets": 2386,
+    "label": "Social Media"
+  },
+  "https://www.facebook.com": {
+    "total_bytes": 2361282,
+    "total_packets": 1273,
+    "mean_packet_size": 1854.9,
+    "unique_ips": 16,
+    "dns_queries": 5,
+    "top_protocol": "HTTPS",
+    "protocol_dist": {
+      "DNS": 0.79,
+      "HTTPS": 51.45,
+      "TCP": 0.16,
+      "UDP": 47.6
+    },
+    "small_packets": 480,
+    "large_packets": 667,
+    "label": "Static Content"
+  },
+  "https://api.github.com": {
+    "total_bytes": 1062765,
+    "total_packets": 728,
+    "mean_packet_size": 1459.84,
+    "unique_ips": 10,
+    "dns_queries": 3,
+    "top_protocol": "HTTPS",
+    "protocol_dist": {
+      "DNS": 0.82,
+      "HTTPS": 93.82,
+      "TCP": 0.55,
+      "UDP": 4.81
+    },
+    "small_packets": 573,
+    "large_packets": 89,
+    "label": "Static Content"
+  },
+  "https://www.wikipedia.org": {
+    "total_bytes": 1571939,
+    "total_packets": 2505,
+    "mean_packet_size": 627.52,
+    "unique_ips": 34,
+    "dns_queries": 33,
+    "top_protocol": "UDP",
+    "protocol_dist": {
+      "DNS": 2.91,
+      "HTTPS": 22.36,
+      "TCP": 0.84,
+      "UDP": 73.89
+    },
+    "small_packets": 1079,
+    "large_packets": 880,
+    "label": "Social Media"
+  }
+}
